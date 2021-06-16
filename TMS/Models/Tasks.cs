@@ -9,7 +9,6 @@ namespace TMS.Models
     {
         public Tasks()
         {
-            //SubTasks = new HashSet<SubTasks>();
         }
 
         [Key]

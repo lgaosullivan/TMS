@@ -15,10 +15,6 @@ namespace TestProject
     [TestClass]
     public class TaskControllerTests
     {
-        Mock<ITasksService> tasksService = new Mock<ITasksService>();
-        
-        Mock<TaskDbContext> taskDbContext = new Mock<TaskDbContext>();
-
         public void Setup()
         {
 
@@ -73,7 +69,7 @@ namespace TestProject
 
             //// act
             var result = controller.ExportExcel(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1));
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsInstanceOfType(result, typeof(Task<FileContentResult>));
+            Assert.IsInstanceOfType(result, typeof(Task<FileContentResult>));
         }
 
         [TestMethod]
@@ -91,7 +87,7 @@ namespace TestProject
             var result = controller.GetTask(1);
 
             // assert
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(Task.FromResult(result).Result);
+            Assert.IsNotNull(Task.FromResult(result).Result);
             //Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("UnitTest", result.Result.);
         }
     }

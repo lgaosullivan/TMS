@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace TMS.Services
 {
     public class TasksService : ITasksService
     {
+        private readonly ILogger _logger;
         private readonly TaskDbContext _taskDbContext;
         public TasksService(TaskDbContext taskDbContext)
         {
@@ -60,8 +62,6 @@ namespace TMS.Services
             .Include(i => i.SubTasks)
             .FirstOrDefault(x => x.Id == id);
 
-
-
             try
             {
                 if (getTasks.SubTasks.Where(i => i.State == "InProgress").Count() >= 1)
@@ -78,16 +78,9 @@ namespace TMS.Services
                 _taskDbContext.Tasks.Update(task);
                 _taskDbContext.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                //if (!TaskExists(id))
-                //{
-                //    return NotFound();
-                //}
-                //else
-                //{
-                //    throw;
-                //}
+                _logger.LogError(ex.ToString());
             }
 
             _taskDbContext.Entry(task).State = EntityState.Modified;
@@ -106,10 +99,6 @@ namespace TMS.Services
 
         public async Task DeleteTask(int id)
         {
-            //var getTasks = _taskDbContext.Tasks
-            //    .AsNoTracking()
-            //.FirstOrDefault(x => x.Id == id);
-
             var getTasks = _taskDbContext.Tasks
                 .AsNoTracking()
             .Include(i => i.SubTasks)
